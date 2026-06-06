@@ -7,3 +7,5 @@ echo "Memória:"
 free -h
 echo "Usuários logados:"
 who
+echo "Processos rodando:"
+ps aux | head -5
