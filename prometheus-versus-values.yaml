@@ -1,0 +1,41 @@
+serverFiles:
+  alerting_rules.yml:
+    groups:
+      - name: observability-demo-alerts
+        rules:
+          - alert: PaymentServiceHighErrorRate
+            expr: |
+              100 *
+              sum(rate(http_errors_total{
+                namespace="app",
+                endpoint="/api/payment"
+              }[5m]))
+              /
+              sum(rate(http_requests_total{
+                namespace="app",
+                endpoint="/api/payment"
+              }[5m]))
+              > 5
+            for: 1m
+            labels:
+              severity: critical
+              service: payment
+            annotations:
+              summary: Payment service has high error rate
+              description: Payment API error rate is above 5% for more than 1 minute.
+
+alertmanager:
+  config:
+    global: {}
+
+    route:
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 3h
+      receiver: versus-incident
+
+    receivers:
+      - name: versus-incident
+        webhook_configs:
+          - url: "http://versus-incident.incident-management.svc.cluster.local:3000/api/incidents"
+            send_resolved: true

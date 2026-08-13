@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: versus-incident-data
+  namespace: incident-management
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: versus-incident
+  namespace: incident-management
+  labels:
+    app: versus-incident
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: versus-incident
+  template:
+    metadata:
+      labels:
+        app: versus-incident
+    spec:
+      containers:
+        - name: versus-incident
+          image: ghcr.io/versuscontrol/versus-incident:latest
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          env:
+            - name: GATEWAY_SECRET
+              value: "devops-lab-secret"
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: versus-incident-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: versus-incident
+  namespace: incident-management
+spec:
+  selector:
+    app: versus-incident
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
+  type: ClusterIP

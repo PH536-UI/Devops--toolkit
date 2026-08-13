@@ -1,0 +1,15 @@
+alertmanager:
+  config:
+    global: {}
+
+    route:
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 3h
+      receiver: versus-incident
+
+    receivers:
+      - name: versus-incident
+        webhook_configs:
+          - url: "http://versus-incident.incident-management.svc.cluster.local:3000/api/incidents"
+            send_resolved: true

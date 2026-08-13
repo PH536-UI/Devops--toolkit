@@ -1,11 +1,21 @@
 #!/bin/bash
-echo "=== DevOps Toolkit v1.0 ==="
-echo "Data: $(date)"
-echo "Disco root:"
-df -h /
-echo "Memória:"
-free -h
-echo "Usuários logados:"
-who
-echo "Processos rodando:"
-ps aux | head -5
+cat <<EOF > index.html
+<h1>=== DevOps Toolkit v4.0 ===</h1>
+<p>Data: $(date)</p>
+<pre>
+Disco root:
+$(df -h / | tail -1)
+
+Memória:
+$(free -h)
+
+Usuários logados:
+$(who)
+
+Processos rodando:
+$(ps aux | head -5)
+</pre>
+EOF
+
+# Fica rodando pra servir HTTP
+python3 -m http.server 8080
