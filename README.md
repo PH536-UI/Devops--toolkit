@@ -1,6 +1,3 @@
-cd ~/Devops--toolkit 2>/dev/null || git clone https://github.com/PH536-UI/Devops--toolkit.git ~/Devops--toolkit
-cd ~/Devops--toolkit
-cat > README.md << 'EOF'
 # 🛠️ DevOps Toolkit - Observability Stack
 
 ### 🇧🇷 PT-BR
@@ -13,6 +10,6 @@ Complete SRE observability toolkit with Kubernetes, Prometheus, Grafana.
 - Real-time monitoring and alerting
 - Production-ready stack
 
-**Author:** Paulo Henrique Pereira | 4x AWS Certified | SRE
-EOF
-git add README.md && git commit -m "docs: bilingual readme" && git push
+Stack: Kubernetes | Prometheus | Grafana | Docker
+Author: Paulo Henrique Pereira | 4x AWS Certified | SRE
+Main: https://github.com/PH536-UI/floci-resilience-lab
